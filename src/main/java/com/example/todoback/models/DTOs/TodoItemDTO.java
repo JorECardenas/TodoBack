@@ -1,19 +1,29 @@
 package com.example.todoback.models.DTOs;
 
 import com.example.todoback.enums.PriorityLevel;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 @Builder
 public class TodoItemDTO {
+
+    @NotNull
+    @Size(min = 1, max = 120)
     private String text;
+
+    @NotNull
     private boolean done;
+
+    @NotNull
     private PriorityLevel priority;
+
+
     private Date dueDate;
     private Date doneDate;
 

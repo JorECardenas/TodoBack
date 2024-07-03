@@ -2,28 +2,20 @@ package com.example.todoback.models;
 
 import com.example.todoback.enums.PriorityLevel;
 import com.example.todoback.models.DTOs.TodoItemDTO;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
-//public record TodoItem( long id,
-//                        String text,
-//                        Date dueDate,
-//                        boolean done,
-//                        Date doneDate,
-//                        PriorityLevel priority,
-//                        Date creationDate) {
-//
-//}
 
-@Getter
-@Setter
+
+@Data
 public class TodoItem {
+
     private String id;
+
+
     private String text;
     private Date dueDate;
     private boolean done;
@@ -53,6 +45,7 @@ public class TodoItem {
         this.doneDate = dto.getDoneDate();
         this.priority = dto.getPriority();
 
+
         this.creationDate = Calendar.getInstance().getTime();
     }
 
@@ -63,6 +56,23 @@ public class TodoItem {
         this.done = dto.isDone();
         this.doneDate = dto.getDoneDate();
         this.priority = dto.getPriority();
+    }
+
+
+    public void CheckDone(){
+        if(!this.done){
+            this.done = true;
+
+            this.doneDate = Calendar.getInstance().getTime();
+        }
+    }
+
+    public void CheckUndone(){
+        if(this.done){
+            this.done = false;
+
+            this.doneDate = null;
+        }
     }
 
 }

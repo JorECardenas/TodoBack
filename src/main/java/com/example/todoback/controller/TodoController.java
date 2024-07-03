@@ -1,12 +1,16 @@
 package com.example.todoback.controller;
 
+import com.example.todoback.enums.PriorityLevel;
+import com.example.todoback.models.DTOs.PaginatedTodoDTO;
 import com.example.todoback.models.TodoItem;
 import com.example.todoback.models.DTOs.TodoItemDTO;
 import com.example.todoback.repository.TodoRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 
 @RestController
@@ -19,20 +23,66 @@ public class TodoController {
         repo = new TodoRepository();
     }
 
-    @GetMapping("/todo")
-    public ArrayList<TodoItem> getAll() { return repo.getAll(); }
+    @GetMapping("/todos")
+    public ResponseEntity<PaginatedTodoDTO> getAllPaginated(@RequestParam @Min(1) int page) {
+        return ResponseEntity.ok(repo.getAllPaginated(page));
+    }
 
-    @GetMapping("/todo/{id}")
-    public TodoItem getById(@PathVariable String id) { return repo.getById(id); }
+    @GetMapping("/todos/getAll")
+    public ResponseEntity<ArrayList<TodoItem>> getAll() {
+        return ResponseEntity.ok(repo.getAll());
+    }
+
+    @GetMapping("/fillData")
+    public ResponseEntity<ArrayList<TodoItem>> fillData() {
+
+        TodoItemDTO test;
+
+        for (int i = 0; i < 20; i++) {
+            test = TodoItemDTO.builder()
+                    .text("test" + i)
+                    .done(false)
+                    .priority(PriorityLevel.High)
+                    .build();
 
 
-    @PostMapping("/todo")
-    public TodoItem create(@RequestBody TodoItemDTO dto) { return repo.add(dto); }
+            repo.add(test);
+        }
 
-    @PostMapping("/todo/{id}")
-    public TodoItem update(@RequestBody TodoItemDTO todoItem, @PathVariable String id) { return repo.update(todoItem, id); }
+        return ResponseEntity.ok(repo.getAll());
 
-    @DeleteMapping("/todo/{id}")
-    public TodoItem delete(@PathVariable String id) { return repo.remove(id);}
+    }
+
+
+
+    @GetMapping("/todos/{id}")
+    public ResponseEntity<TodoItem> getById(@PathVariable String id) {
+        return ResponseEntity.ok(repo.getById(id));
+    }
+
+    @PostMapping("/todos")
+    public ResponseEntity<TodoItem> create(@RequestBody @Valid TodoItemDTO dto) {
+        return ResponseEntity.ok(repo.add(dto));
+    }
+
+    @PostMapping("/todos/{id}")
+    public ResponseEntity<TodoItem>  update(@RequestBody @Valid TodoItemDTO todoItem, @PathVariable String id) {
+        return ResponseEntity.ok(repo.update(todoItem, id));
+    }
+
+    @DeleteMapping("/todos/{id}")
+    public ResponseEntity<TodoItem>  delete(@PathVariable String id) {
+        return ResponseEntity.ok(repo.remove(id));
+    }
+
+    @PostMapping("/todos/{id}/done")
+    public ResponseEntity<TodoItem>  complete(@PathVariable String id) {
+        return ResponseEntity.ok(repo.checkById(id));
+    }
+
+    @PutMapping("/todos/{id}/undone")
+    public ResponseEntity<TodoItem>  uncomplete(@PathVariable String id) {
+        return ResponseEntity.ok(repo.uncheckById(id));
+    }
 
 }

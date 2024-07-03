@@ -1,19 +1,25 @@
 package com.example.todoback.repository;
 
+import com.example.todoback.models.DTOs.PaginatedTodoDTO;
 import com.example.todoback.models.DTOs.TodoItemDTO;
 import com.example.todoback.models.TodoItem;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
+
+@Repository
 public class TodoRepository {
 
     private final ArrayList<TodoItem> todoItems;
 
-    public TodoRepository() { todoItems = new ArrayList<TodoItem>(); }
+    public TodoRepository() { todoItems = new ArrayList<>(); }
 
     public ArrayList<TodoItem> getAll() { return todoItems; }
+
+    public PaginatedTodoDTO getAllPaginated(int page) {
+        return new PaginatedTodoDTO(todoItems, page);
+    }
 
     public TodoItem getById(String id) {
 
@@ -50,6 +56,28 @@ public class TodoRepository {
         for(TodoItem item : todoItems){
             if(item.getId().equals(id)){
                 todoItems.remove(item);
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    public TodoItem checkById(String id) {
+        for(TodoItem item : todoItems){
+            if(item.getId().equals(id)){
+                item.CheckDone();
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    public TodoItem uncheckById(String id) {
+        for(TodoItem item : todoItems){
+            if(item.getId().equals(id)){
+                item.CheckUndone();
                 return item;
             }
         }
