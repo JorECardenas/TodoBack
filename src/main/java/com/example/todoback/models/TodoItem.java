@@ -23,6 +23,22 @@ public class TodoItem {
     private PriorityLevel priority;
     private Date creationDate;
 
+    public int translatePriorityValue(){
+        switch (priority){
+            case High -> {
+                return 0;
+            }
+            case Medium -> {
+                return 1;
+            }
+            case Low -> {
+                return 2;
+            }
+        }
+
+        return -1;
+    }
+
     public TodoItem(String text, boolean done, Date dueDate, Date doneDate, PriorityLevel priority) {
         this.id = UUID.randomUUID().toString();
 

@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 
 @RestController
@@ -24,8 +27,14 @@ public class TodoController {
     }
 
     @GetMapping("/todos")
-    public ResponseEntity<PaginatedTodoDTO> getAllPaginated(@RequestParam @Min(1) int page) {
-        return ResponseEntity.ok(repo.getAllPaginated(page));
+    public ResponseEntity<PaginatedTodoDTO> getAllPaginated(@RequestParam(defaultValue = "1") @Min(1) int page,
+                                                            @RequestParam(defaultValue = "") String textFilter,
+                                                            @RequestParam(defaultValue = "") List<String> sortBy,
+                                                            @RequestParam(defaultValue = "DESC") String sortOrder,
+                                                            @RequestParam(defaultValue = "") List<PriorityLevel> priorityFilter,
+                                                            @RequestParam(defaultValue = "") String stateFilter) {
+
+        return ResponseEntity.ok(repo.getAllPaginated(page, textFilter, sortBy, sortOrder, priorityFilter, stateFilter));
     }
 
     @GetMapping("/todos/getAll")
@@ -38,11 +47,15 @@ public class TodoController {
 
         TodoItemDTO test;
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 15; i++) {
+
+
+
             test = TodoItemDTO.builder()
                     .text("test" + i)
                     .done(false)
-                    .priority(PriorityLevel.High)
+                    .priority(PriorityLevel.values()[new Random().nextInt(PriorityLevel.values().length)])
+                    .dueDate(new Date(Math.abs(System.currentTimeMillis() - new Random().nextLong())))
                     .build();
 
 
