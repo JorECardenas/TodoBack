@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
-import java.util.PriorityQueue;
 
 @Data
 @Builder
@@ -21,9 +20,5 @@ public class GetRequestParamsDTO {
     private List<String> sortBy;
 
     private String sortOrder;
-
-
-
-
 
 }

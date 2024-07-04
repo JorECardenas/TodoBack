@@ -20,7 +20,7 @@ public class TodoRepository {
     private ArrayList<TodoItem> filterItems(String textFilter, List<PriorityLevel> priorityFilter, String stateFilter) {
         ArrayList<TodoItem> filteredItems = new ArrayList<>(todoItems);
 
-        System.out.println("tfilt: " + textFilter + ", pfilt: " + priorityFilter.toString() + ", sfilt: " + stateFilter.toString());
+        //System.out.println("tfilt: " + textFilter + ", pfilt: " + priorityFilter.toString() + ", sfilt: " + stateFilter.toString());
 
         if (!textFilter.isEmpty()) {
             filteredItems.removeIf(todoItem -> !todoItem.getText().toLowerCase().contains(textFilter.toLowerCase()));
@@ -44,9 +44,9 @@ public class TodoRepository {
     private ArrayList<TodoItem> sortItems(ArrayList<TodoItem> filteredItems, List<String> sortBy, String sortOrder) {
         boolean sortDesc = sortOrder.equals("DESC");
 
-        System.out.println("sortOrder: " + sortOrder + ", sortDesc: " + sortBy.toString());
+        //System.out.println("sortOrder: " + sortOrder + ", sortDesc: " + sortBy.toString());
 
-        if(sortBy == null) {
+        if(sortBy.isEmpty()) {
             filteredItems.sort(Comparator.comparing(TodoItem::getCreationDate));
         }
         else if (sortBy.contains("priority") && sortBy.contains("duedate")) {
@@ -64,6 +64,7 @@ public class TodoRepository {
         if(!sortDesc) {
             Collections.reverse(filteredItems);
         }
+
 
 
         return filteredItems;

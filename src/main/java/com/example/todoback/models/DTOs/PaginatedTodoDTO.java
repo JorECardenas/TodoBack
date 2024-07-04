@@ -1,7 +1,6 @@
 package com.example.todoback.models.DTOs;
 
 import com.example.todoback.models.TodoItem;
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.ArrayList;
