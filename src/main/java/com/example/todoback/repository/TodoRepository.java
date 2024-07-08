@@ -60,7 +60,7 @@ public class TodoRepository {
         Map<String, SortStrategy> strategies = new HashMap<>();
 
         strategies.put("", new DefaultSortStrategy(prioritySortDesc));
-        strategies.put("priority,duedate", new PriorityDateSortStrategy(prioritySortDesc, dueDateSortDesc));
+        strategies.put("priority,duedate", new PriorityDateSortStrategy(priorityOrder, duedateOrder));
         strategies.put("priority", new PrioritySortStrategy(prioritySortDesc));
         strategies.put("duedate", new DueDateSortStrategy(dueDateSortDesc));
 

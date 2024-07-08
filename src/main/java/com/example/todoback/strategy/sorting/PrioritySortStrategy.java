@@ -18,10 +18,10 @@ public class PrioritySortStrategy implements SortStrategy {
 
 
         if(this.desc){
-            todos.sort(Comparator.comparing(TodoItem::translatePriorityValue).reversed());
+            todos.sort(Comparator.comparing(TodoItem::translatePriorityValue));
         }
         else{
-            todos.sort(Comparator.comparing(TodoItem::translatePriorityValue));
+            todos.sort(Comparator.comparing(TodoItem::translatePriorityValue).reversed());
         }
     }
 }
