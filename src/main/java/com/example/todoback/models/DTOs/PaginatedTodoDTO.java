@@ -1,0 +1,126 @@
+package com.example.todoback.models.DTOs;
+
+import com.example.todoback.models.TodoItem;
+import lombok.Data;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
+@Data
+public class PaginatedTodoDTO {
+
+    private static int PAGE_SIZE = 10;
+
+    private List<TodoItem> content;
+
+    private GetRequestParamsDTO parameters;
+
+    private AverageDataDTO averageData;
+
+    private boolean isLastPage;
+    private boolean isFirstPage;
+
+    private int currentPage;
+
+    private int itemsInPage;
+
+    private int totalPages;
+    private int totalItems;
+
+    private boolean allDone;
+
+
+
+    public PaginatedTodoDTO(ArrayList<TodoItem> original, int pageNumber, GetRequestParamsDTO parameters) {
+
+        int start = (pageNumber - 1) * PAGE_SIZE;
+        int end = Math.min((start + PAGE_SIZE), original.size());
+
+        this.content = original.subList(start, end);
+
+        this.itemsInPage = content.size();
+
+        this.currentPage = pageNumber;
+
+        this.totalItems = original.size();
+        this.totalPages = (int) Math.ceil((float) totalItems / (float) PAGE_SIZE);
+
+        this.isFirstPage = start == 0;
+        this.isLastPage = currentPage == totalPages;
+
+
+
+        this.parameters = parameters;
+    }
+
+    public void checkAllDone(List<TodoItem> items) {
+
+        if(items.isEmpty()){ this.allDone = false; return; }
+
+        this.allDone = true;
+
+        for (TodoItem item : items) {
+            if(!item.isDone()) {
+                this.allDone = false;
+                break;
+            }
+        }
+    }
+
+    public void handleAverages(ArrayList<TodoItem> items) {
+        int numLows = 0;
+        int numMediums = 0;
+        int numHighs = 0;
+
+        long lowDuration = 0;
+        long mediumDuration = 0;
+        long highDuration = 0;
+
+        long totalDuration = 0;
+
+        for (TodoItem item : items) {
+
+            if(item.getDueDate() == null || item.getDoneDate() == null){
+                continue;
+            }
+
+            switch (item.getPriority()){
+                case High -> {
+                    numHighs++;
+                    highDuration += item.getDoneDate().getTime() - item.getCreationDate().getTime();
+                }
+                case Medium -> {
+                    numMediums++;
+                    mediumDuration += item.getDoneDate().getTime() - item.getCreationDate().getTime();
+                }
+                case Low -> {
+                    numLows++;
+                    lowDuration += item.getDoneDate().getTime() - item.getCreationDate().getTime();
+                }
+            }
+
+            totalDuration += item.getDoneDate().getTime() - item.getCreationDate().getTime();
+
+
+        }
+
+        long generalAverage = totalItems == 0 ? 0 : totalDuration / totalItems;
+
+        long lowAverage = numLows == 0 ? 0 : lowDuration / numLows;
+        long mediumAverage = numMediums == 0 ? 0 : mediumDuration / numMediums  ;
+        long highAverage = numHighs == 0 ? 0 : highDuration / numHighs;
+
+
+
+        this.averageData = new AverageDataDTO(generalAverage, lowAverage, mediumAverage, highAverage);
+
+
+
+
+    }
+
+
+
+
+}
