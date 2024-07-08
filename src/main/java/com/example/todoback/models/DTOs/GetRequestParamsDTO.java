@@ -19,6 +19,7 @@ public class GetRequestParamsDTO {
 
     private List<String> sortBy;
 
-    private String sortOrder;
+    private String prioritySortOrder;
+    private  String dueDateSortOrder;
 
 }

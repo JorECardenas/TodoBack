@@ -39,6 +39,17 @@ public class TodoItem {
         return -1;
     }
 
+    public long translateDueDate(){
+
+        if (dueDate == null){
+            return 0;
+        }
+
+        return dueDate.getTime();
+
+
+    }
+
     public TodoItem(String text, boolean done, Date dueDate, Date doneDate, PriorityLevel priority) {
         this.id = UUID.randomUUID().toString();
 

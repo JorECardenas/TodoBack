@@ -5,6 +5,8 @@ import com.example.todoback.models.DTOs.GetRequestParamsDTO;
 import com.example.todoback.models.DTOs.PaginatedTodoDTO;
 import com.example.todoback.models.DTOs.TodoItemDTO;
 import com.example.todoback.models.TodoItem;
+import com.example.todoback.strategy.sorting.*;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -41,30 +43,28 @@ public class TodoRepository {
 
     }
 
-    private ArrayList<TodoItem> sortItems(ArrayList<TodoItem> filteredItems, List<String> sortBy, String sortOrder) {
-        boolean sortDesc = sortOrder.equals("DESC");
+    private ArrayList<TodoItem> sortItems(ArrayList<TodoItem> filteredItems,
+                                          List<String> sortBy,
+                                          String priorityOrder,
+                                          String duedateOrder) {
 
-        //System.out.println("sortOrder: " + sortOrder + ", sortDesc: " + sortBy.toString());
-
-        if(sortBy.isEmpty()) {
-            filteredItems.sort(Comparator.comparing(TodoItem::getCreationDate));
-        }
-        else if (sortBy.contains("priority") && sortBy.contains("duedate")) {
-            filteredItems.sort(Comparator.comparing(TodoItem::translatePriorityValue)
-                    .thenComparing(TodoItem::getDueDate));
-        }
-        else if(sortBy.contains("priority")) {
-            filteredItems.sort(Comparator.comparing(TodoItem::translatePriorityValue));
-        }
-        else if(sortBy.contains("duedate")) {
-            filteredItems.sort(Comparator.comparing(TodoItem::getDueDate));
-        }
+        boolean prioritySortDesc = priorityOrder.equals("DESC");
+        boolean dueDateSortDesc = duedateOrder.equals("DESC");
 
 
-        if(!sortDesc) {
-            Collections.reverse(filteredItems);
-        }
 
+        String key = String.join(",", sortBy);
+
+        //System.out.println(key);
+
+        Map<String, SortStrategy> strategies = new HashMap<>();
+
+        strategies.put("", new DefaultSortStrategy(prioritySortDesc));
+        strategies.put("priority,duedate", new PriorityDateSortStrategy(prioritySortDesc, dueDateSortDesc));
+        strategies.put("priority", new PrioritySortStrategy(prioritySortDesc));
+        strategies.put("duedate", new DueDateSortStrategy(dueDateSortDesc));
+
+        strategies.get(key).sort(filteredItems);
 
 
         return filteredItems;
@@ -75,13 +75,14 @@ public class TodoRepository {
     public PaginatedTodoDTO getAllPaginated(int page,
                                             String textFilter,
                                             List<String> sortBy,
-                                            String sortOrder,
+                                            String priorityOrder,
+                                            String dueDateOrder,
                                             List<PriorityLevel> priorityFilter,
                                             String stateFilter ) {
 
         ArrayList<TodoItem> filteredItems = filterItems(textFilter, priorityFilter, stateFilter);
 
-        filteredItems = sortItems(filteredItems, sortBy, sortOrder);
+        filteredItems = sortItems(filteredItems, sortBy, priorityOrder, dueDateOrder);
 
 
         GetRequestParamsDTO params = GetRequestParamsDTO.builder()
@@ -89,11 +90,20 @@ public class TodoRepository {
                             .priorityFilter(priorityFilter)
                             .stateFilter(stateFilter)
                             .sortBy(sortBy)
-                            .sortOrder(sortOrder)
+                            .prioritySortOrder(priorityOrder)
+                            .dueDateSortOrder(dueDateOrder)
                             .build();
 
 
-        return new PaginatedTodoDTO(filteredItems, page, params);
+
+        PaginatedTodoDTO dto = new PaginatedTodoDTO(filteredItems, page, params);
+
+        dto.handleAverages(todoItems);
+
+        dto.checkAllDone(todoItems);
+
+        return dto;
+
     }
 
     public TodoItem getById(String id) {
@@ -158,6 +168,22 @@ public class TodoRepository {
         }
 
         return null;
+    }
+
+    public List<TodoItem> checkAll() {
+        for (TodoItem item : todoItems) {
+            item.CheckDone();
+        }
+
+        return todoItems;
+    }
+
+    public List<TodoItem> uncheckAll() {
+        for (TodoItem item : todoItems) {
+            item.CheckUndone();
+        }
+
+        return todoItems;
     }
 
 }

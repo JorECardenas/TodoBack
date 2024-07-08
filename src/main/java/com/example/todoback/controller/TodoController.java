@@ -5,6 +5,7 @@ import com.example.todoback.models.DTOs.PaginatedTodoDTO;
 import com.example.todoback.models.TodoItem;
 import com.example.todoback.models.DTOs.TodoItemDTO;
 import com.example.todoback.repository.TodoRepository;
+import com.example.todoback.utils.RandomDateUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 public class TodoController {
@@ -30,11 +31,11 @@ public class TodoController {
     public ResponseEntity<PaginatedTodoDTO> getAllPaginated(@RequestParam(defaultValue = "1") @Min(1) int page,
                                                             @RequestParam(defaultValue = "") String textFilter,
                                                             @RequestParam(defaultValue = "") List<String> sortBy,
-                                                            @RequestParam(defaultValue = "DESC") String sortOrder,
+                                                            @RequestParam(defaultValue = "DESC") String priorityOrder,
+                                                            @RequestParam(defaultValue = "DESC") String dueDateOrder,
                                                             @RequestParam(defaultValue = "") List<PriorityLevel> priorityFilter,
                                                             @RequestParam(defaultValue = "") String stateFilter) {
-
-        return ResponseEntity.ok(repo.getAllPaginated(page, textFilter, sortBy, sortOrder, priorityFilter, stateFilter));
+        return ResponseEntity.ok(repo.getAllPaginated(page, textFilter, sortBy, priorityOrder, dueDateOrder, priorityFilter, stateFilter));
     }
 
     @GetMapping("/todos/getAll")
@@ -47,7 +48,7 @@ public class TodoController {
 
         TodoItemDTO test;
 
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 20; i++) {
 
 
 
@@ -55,7 +56,7 @@ public class TodoController {
                     .text("test" + i)
                     .done(false)
                     .priority(PriorityLevel.values()[new Random().nextInt(PriorityLevel.values().length)])
-                    .dueDate(new Date(Math.abs(System.currentTimeMillis() - new Random().nextLong())))
+                    .dueDate(RandomDateUtil.randomFutureDate())
                     .build();
 
 
@@ -90,12 +91,23 @@ public class TodoController {
 
     @PostMapping("/todos/{id}/done")
     public ResponseEntity<TodoItem>  complete(@PathVariable String id) {
+        System.out.println(id);
         return ResponseEntity.ok(repo.checkById(id));
     }
 
-    @PutMapping("/todos/{id}/undone")
+    @PostMapping("/todos/{id}/undone")
     public ResponseEntity<TodoItem>  uncomplete(@PathVariable String id) {
         return ResponseEntity.ok(repo.uncheckById(id));
+    }
+
+    @PostMapping("/todos/all/done")
+    public ResponseEntity<List<TodoItem>>  allDone() {
+        return ResponseEntity.ok(repo.checkAll());
+    }
+
+    @PostMapping("/todos/all/undone")
+    public ResponseEntity<List<TodoItem>>  allUndone() {
+        return ResponseEntity.ok(repo.uncheckAll());
     }
 
 }
