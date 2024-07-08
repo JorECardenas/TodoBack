@@ -48,6 +48,8 @@ GET /api/todos
 | `priorityFilter` | `string[]` | The objects with priorities different to the ones in this array will be ommited    | `[]`    |
 | `stateFilter`    | `string`   | The objects with a different state than this one will be ommited                   | `""`    |
 
+Returns `PaginatedTodoDTO`
+
 ### Create item
 ```http request
 POST /api/todos
@@ -55,6 +57,8 @@ POST /api/todos
 | Parameter | Type          | Description                     |
 |:----------|:--------------|:--------------------------------|
 | `dto`     | `TodoItemDTO` | `Body` <br/>The object you need | 
+
+Returns `TodoItem`
 
 
 ### Update item
@@ -67,6 +71,8 @@ POST /api/todos/:id
 | `id`      | `string`      | The id of the object being updated |
 | `dto`     | `TodoItemDTO` | `Body` <br/>The object you need    | 
 
+Returns `TodoItem`
+
 
 ### Delete item
 
@@ -77,6 +83,8 @@ DELETE /api/todos/:id
 |:----------|:--------------|:-----------------------------------|
 | `id`      | `string`      | The id of the object being deleted |
 
+Returns `TodoItem`
+
 
 ### Mark item as done
 ```http request
@@ -86,6 +94,8 @@ GET /api/todos/:id/done
 |:----------|:--------------|:------------------------------------------|
 | `id`      | `string`      | The id of the object being marked as done |
 
+Returns `TodoItem`
+
 
 ### Mark item as undone
 ```http request
@@ -94,6 +104,8 @@ GET /api/todos/:id/undone
 | Parameter | Type          | Description                                 |
 |:----------|:--------------|:--------------------------------------------|
 | `id`      | `string`      | The id of the object being marked as undone |
+
+Returns `TodoItem`
 
 
 ### Examples
@@ -146,78 +158,7 @@ Here are some examples of the model used here
       "priority": "Medium",
       "creationDate": "2024-07-08T04:10:43.638+00:00"
     },
-    {
-      "id": "8b24a8d4-03ec-4aa0-8bd0-733a9367dc5c",
-      "text": "test19",
-      "dueDate": "2024-06-02T00:00:43.638+00:00",
-      "done": false,
-      "doneDate": null,
-      "priority": "High",
-      "creationDate": "2024-07-08T04:10:43.638+00:00"
-    },
-    {
-      "id": "ce8e0440-bdcf-401b-981f-33e574624dda",
-      "text": "test11",
-      "dueDate": "2026-04-07T00:00:43.636+00:00",
-      "done": false,
-      "doneDate": null,
-      "priority": "High",
-      "creationDate": "2024-07-08T04:10:43.637+00:00"
-    },
-    {
-      "id": "53f1b666-86dd-4af4-a0cd-9821c6fe7741",
-      "text": "test12",
-      "dueDate": "2026-03-01T00:00:43.637+00:00",
-      "done": false,
-      "doneDate": null,
-      "priority": "Medium",
-      "creationDate": "2024-07-08T04:10:43.637+00:00"
-    },
-    {
-      "id": "126e5595-65a7-4b03-9656-d8bcc3fe165b",
-      "text": "test13",
-      "dueDate": "2032-05-07T00:00:43.637+00:00",
-      "done": false,
-      "doneDate": null,
-      "priority": "Low",
-      "creationDate": "2024-07-08T04:10:43.637+00:00"
-    },
-    {
-      "id": "8e58637f-2081-4d0f-a616-7644c261656b",
-      "text": "test14",
-      "dueDate": "2028-02-05T00:00:43.637+00:00",
-      "done": false,
-      "doneDate": null,
-      "priority": "High",
-      "creationDate": "2024-07-08T04:10:43.637+00:00"
-    },
-    {
-      "id": "cd42cb2b-e592-450e-9530-82ebcf86d2c8",
-      "text": "test15",
-      "dueDate": "2032-04-03T00:00:43.637+00:00",
-      "done": false,
-      "doneDate": null,
-      "priority": "Low",
-      "creationDate": "2024-07-08T04:10:43.637+00:00"
-    },
-    {
-      "id": "260c049c-a76b-40bd-82df-6c5436d09fe3",
-      "text": "test16",
-      "dueDate": "2033-02-05T00:00:43.637+00:00",
-      "done": false,
-      "doneDate": null,
-      "priority": "Low",
-      "creationDate": "2024-07-08T04:10:43.637+00:00"
-    },
-    {
-      "id": "aa2b613b-d9a6-4ac9-b692-a7c20db3f65c",
-      "text": "test3",
-      "dueDate": "2026-04-01T00:00:43.635+00:00",
-      "done": false,
-      "doneDate": null,
-      "priority": "Low",
-      "creationDate": "2024-07-08T04:10:43.636+00:00"
-    }
+    ...
   ],
   "parameters": {
     "textFilter": "",
