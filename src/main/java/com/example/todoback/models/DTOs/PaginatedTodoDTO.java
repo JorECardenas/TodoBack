@@ -78,8 +78,13 @@ public class PaginatedTodoDTO {
         long highDuration = 0;
 
         long totalDuration = 0;
+        long doneItems = 0;
 
         for (TodoItem item : items) {
+
+            if(!item.isDone()) {
+                continue;
+            }
 
             if(item.getDueDate() == null || item.getDoneDate() == null){
                 continue;
@@ -101,11 +106,11 @@ public class PaginatedTodoDTO {
             }
 
             totalDuration += item.getDoneDate().getTime() - item.getCreationDate().getTime();
-
+            doneItems ++;
 
         }
 
-        long generalAverage = totalItems == 0 ? 0 : totalDuration / totalItems;
+        long generalAverage = doneItems == 0 ? 0 : totalDuration / doneItems;
 
         long lowAverage = numLows == 0 ? 0 : lowDuration / numLows;
         long mediumAverage = numMediums == 0 ? 0 : mediumDuration / numMediums  ;

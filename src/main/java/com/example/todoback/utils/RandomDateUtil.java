@@ -15,7 +15,7 @@ import java.util.TimeZone;
 public final class RandomDateUtil {
 
     private static final String TIMEZONE = "UTC";
-    private static final int MAX_YEAR = 2038;
+    private static final int MAX_YEAR = 2024;
     private static final int MIN_YEAR = 1900;
 
     private static Calendar createCalendar() {

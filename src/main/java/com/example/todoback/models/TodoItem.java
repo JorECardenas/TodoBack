@@ -1,6 +1,7 @@
 package com.example.todoback.models;
 
 import com.example.todoback.enums.PriorityLevel;
+import com.example.todoback.models.DTOs.GetRequestParamsDTO;
 import com.example.todoback.models.DTOs.TodoItemDTO;
 import lombok.Data;
 
@@ -74,6 +75,24 @@ public class TodoItem {
 
 
         this.creationDate = Calendar.getInstance().getTime();
+    }
+
+    public boolean Filtered(GetRequestParamsDTO params){
+
+        if(params.getTextFilter().isEmpty()
+                && params.getPriorityFilter().isEmpty()
+                && params.getStateFilter().isEmpty() ) { return true; }
+
+        if(!params.getTextFilter().isEmpty() &&
+                this.text.contains(params.getTextFilter())) { return true; }
+
+        else if(!params.getPriorityFilter().isEmpty() &&
+            params.getPriorityFilter().contains(this.priority)) { return true; }
+
+        else if(!params.getStateFilter().isEmpty() &&
+                params.getStateFilter().equals("done") != this.done) { return true; }
+
+        return false;
     }
 
 
