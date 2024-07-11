@@ -100,7 +100,7 @@ public class TodoRepository {
 
         dto.handleAverages(todoItems);
 
-        dto.checkAllDone(todoItems);
+        dto.checkAllDone(filteredItems);
 
         return dto;
 
@@ -170,17 +170,24 @@ public class TodoRepository {
         return null;
     }
 
-    public List<TodoItem> checkAll() {
+    public List<TodoItem> checkAll(GetRequestParamsDTO params) {
         for (TodoItem item : todoItems) {
-            item.CheckDone();
+            if(item.Filtered(params)){
+                item.CheckDone();
+
+            }
         }
 
         return todoItems;
     }
 
-    public List<TodoItem> uncheckAll() {
+    public List<TodoItem> uncheckAll(GetRequestParamsDTO params) {
         for (TodoItem item : todoItems) {
-            item.CheckUndone();
+            if(item.Filtered(params)){
+                item.CheckUndone();
+
+            }
+
         }
 
         return todoItems;

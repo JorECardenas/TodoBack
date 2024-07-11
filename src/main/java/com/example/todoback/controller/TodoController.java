@@ -1,6 +1,7 @@
 package com.example.todoback.controller;
 
 import com.example.todoback.enums.PriorityLevel;
+import com.example.todoback.models.DTOs.GetRequestParamsDTO;
 import com.example.todoback.models.DTOs.PaginatedTodoDTO;
 import com.example.todoback.models.TodoItem;
 import com.example.todoback.models.DTOs.TodoItemDTO;
@@ -11,10 +12,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @CrossOrigin("*")
 @RestController
@@ -48,7 +46,10 @@ public class TodoController {
 
         TodoItemDTO test;
 
-        for (int i = 0; i < 20; i++) {
+        Calendar calendar = Calendar.getInstance();
+
+
+        for (int i = 0; i < 15; i++) {
 
 
 
@@ -56,9 +57,10 @@ public class TodoController {
                     .text("test" + i)
                     .done(false)
                     .priority(PriorityLevel.values()[new Random().nextInt(PriorityLevel.values().length)])
-                    .dueDate(RandomDateUtil.randomFutureDate())
+                    .dueDate(calendar.getTime())
                     .build();
 
+            calendar.add(Calendar.HOUR, 48);
 
             repo.add(test);
         }
@@ -101,13 +103,13 @@ public class TodoController {
     }
 
     @PostMapping("/todos/all/done")
-    public ResponseEntity<List<TodoItem>>  allDone() {
-        return ResponseEntity.ok(repo.checkAll());
+    public ResponseEntity<List<TodoItem>>  allDone(@RequestBody GetRequestParamsDTO params) {
+        return ResponseEntity.ok(repo.checkAll(params));
     }
 
     @PostMapping("/todos/all/undone")
-    public ResponseEntity<List<TodoItem>>  allUndone() {
-        return ResponseEntity.ok(repo.uncheckAll());
+    public ResponseEntity<List<TodoItem>>  allUndone(@RequestBody GetRequestParamsDTO params) {
+        return ResponseEntity.ok(repo.uncheckAll(params));
     }
 
 }
