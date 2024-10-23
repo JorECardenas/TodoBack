@@ -6,8 +6,9 @@ import com.example.todoback.models.DTOs.PaginatedTodoDTO;
 import com.example.todoback.models.DTOs.TodoItemDTO;
 import com.example.todoback.models.TodoItem;
 import com.example.todoback.strategy.sorting.*;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.stereotype.Repository;
+
+import java.util.stream.Collectors;
 
 import java.util.*;
 
@@ -20,26 +21,12 @@ public class TodoRepository {
     public TodoRepository() { todoItems = new ArrayList<>(); }
 
     private ArrayList<TodoItem> filterItems(String textFilter, List<PriorityLevel> priorityFilter, String stateFilter) {
-        ArrayList<TodoItem> filteredItems = new ArrayList<>(todoItems);
 
-        //System.out.println("tfilt: " + textFilter + ", pfilt: " + priorityFilter.toString() + ", sfilt: " + stateFilter.toString());
-
-        if (!textFilter.isEmpty()) {
-            filteredItems.removeIf(todoItem -> !todoItem.getText().toLowerCase().contains(textFilter.toLowerCase()));
-        }
-
-        if (!priorityFilter.isEmpty()) {
-            filteredItems.removeIf(x -> !priorityFilter.contains(x.getPriority()));
-        }
-
-        if(!stateFilter.isEmpty()) {
-            boolean done = stateFilter.equals("done");
-
-            filteredItems.removeIf(x -> x.isDone() != done);
-        }
-
-
-        return filteredItems;
+        return todoItems.stream()
+                .filter(todoItem -> textFilter.isEmpty() || todoItem.getText().toLowerCase().contains(textFilter.toLowerCase()))
+                .filter(todoItem -> priorityFilter.isEmpty() || priorityFilter.contains(todoItem.getPriority()))
+                .filter(todoItem -> stateFilter.isEmpty() || todoItem.isDone() == stateFilter.equals("done"))
+                .collect(Collectors.toCollection(ArrayList::new));
 
     }
 
@@ -54,8 +41,6 @@ public class TodoRepository {
 
 
         String key = String.join(",", sortBy);
-
-        //System.out.println(key);
 
         Map<String, SortStrategy> strategies = new HashMap<>();
 
@@ -82,7 +67,7 @@ public class TodoRepository {
 
         ArrayList<TodoItem> filteredItems = filterItems(textFilter, priorityFilter, stateFilter);
 
-        filteredItems = sortItems(filteredItems, sortBy, priorityOrder, dueDateOrder);
+        sortItems(filteredItems, sortBy, priorityOrder, dueDateOrder);
 
 
         GetRequestParamsDTO params = GetRequestParamsDTO.builder()

@@ -19,24 +19,16 @@ public class PriorityDateSortStrategy implements SortStrategy {
     @Override
     public void sort(List<TodoItem> todos) {
 
-        Comparator<TodoItem> comparator = Comparator.comparing(TodoItem::getPriority)
-                .thenComparingLong(TodoItem::translateDueDate);
+        Comparator<TodoItem> comparator = Comparator.comparing(TodoItem::getPriority);
 
-        if(Objects.equals(priorityDesc, "DESC") && Objects.equals(dateDesc, "DESC")) {
-            comparator = Comparator.comparing(TodoItem::getPriority)
-                    .thenComparing(Comparator.comparingLong(TodoItem::translateDueDate).reversed());
+        if (Objects.equals(priorityDesc, "DESC")) {
+            comparator = comparator.reversed();
         }
-        else if(Objects.equals(priorityDesc, "DESC") && Objects.equals(dateDesc, "ASC")) {
-            comparator = Comparator.comparing(TodoItem::getPriority)
-                    .thenComparingLong(TodoItem::translateDueDate);
-        }
-        else if(Objects.equals(priorityDesc, "ASC") && Objects.equals(dateDesc, "DESC")) {
-            comparator = Comparator.comparing(TodoItem::getPriority).reversed()
-                    .thenComparing(Comparator.comparingLong(TodoItem::translateDueDate).reversed());
-        }
-        else if(Objects.equals(priorityDesc, "ASC") && Objects.equals(dateDesc, "ASC")) {
-            comparator = Comparator.comparing(TodoItem::getPriority).reversed()
-                    .thenComparing(Comparator.comparingLong(TodoItem::translateDueDate));
+
+        if (Objects.equals(dateDesc, "DESC")) {
+            comparator = comparator.thenComparing(Comparator.comparingLong(TodoItem::translateDueDate).reversed());
+        } else {
+            comparator = comparator.thenComparingLong(TodoItem::translateDueDate);
         }
 
 

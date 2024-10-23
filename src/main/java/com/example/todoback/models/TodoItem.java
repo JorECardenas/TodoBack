@@ -79,20 +79,26 @@ public class TodoItem {
 
     public boolean Filtered(GetRequestParamsDTO params){
 
-        if(params.getTextFilter().isEmpty()
-                && params.getPriorityFilter().isEmpty()
-                && params.getStateFilter().isEmpty() ) { return true; }
+//        if(params.getTextFilter().isEmpty()
+//                && params.getPriorityFilter().isEmpty()
+//                && params.getStateFilter().isEmpty() ) { return true; }
+//
+//        if(!params.getTextFilter().isEmpty() &&
+//                this.text.contains(params.getTextFilter())) { return true; }
+//
+//        else if(!params.getPriorityFilter().isEmpty() &&
+//            params.getPriorityFilter().contains(this.priority)) { return true; }
+//
+//        else if(!params.getStateFilter().isEmpty() &&
+//                params.getStateFilter().equals("done") != this.done) { return true; }
+//
+//        return false;
 
-        if(!params.getTextFilter().isEmpty() &&
-                this.text.contains(params.getTextFilter())) { return true; }
+        boolean textFilterMatch = params.getTextFilter().isEmpty() || this.text.contains(params.getTextFilter());
+        boolean priorityFilterMatch = params.getPriorityFilter().isEmpty() || params.getPriorityFilter().contains(this.priority);
+        boolean stateFilterMatch = params.getStateFilter().isEmpty() || params.getStateFilter().equals("done") == this.done;
 
-        else if(!params.getPriorityFilter().isEmpty() &&
-            params.getPriorityFilter().contains(this.priority)) { return true; }
-
-        else if(!params.getStateFilter().isEmpty() &&
-                params.getStateFilter().equals("done") != this.done) { return true; }
-
-        return false;
+        return textFilterMatch && priorityFilterMatch && stateFilterMatch;
     }
 
 

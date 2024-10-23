@@ -3,7 +3,6 @@ package com.example.todoback.models.DTOs;
 import com.example.todoback.models.TodoItem;
 import lombok.Data;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,16 +55,8 @@ public class PaginatedTodoDTO {
 
     public void checkAllDone(List<TodoItem> items) {
 
-        if(items.isEmpty()){ this.allDone = false; return; }
+        this.allDone =  !items.isEmpty() && items.stream().allMatch(TodoItem::isDone);
 
-        this.allDone = true;
-
-        for (TodoItem item : items) {
-            if(!item.isDone()) {
-                this.allDone = false;
-                break;
-            }
-        }
     }
 
     public void handleAverages(ArrayList<TodoItem> items) {

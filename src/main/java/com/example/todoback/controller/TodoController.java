@@ -6,7 +6,6 @@ import com.example.todoback.models.DTOs.PaginatedTodoDTO;
 import com.example.todoback.models.TodoItem;
 import com.example.todoback.models.DTOs.TodoItemDTO;
 import com.example.todoback.repository.TodoRepository;
-import com.example.todoback.utils.RandomDateUtil;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.http.ResponseEntity;
@@ -50,9 +49,6 @@ public class TodoController {
 
 
         for (int i = 0; i < 15; i++) {
-
-
-
             test = TodoItemDTO.builder()
                     .text("test" + i)
                     .done(false)
