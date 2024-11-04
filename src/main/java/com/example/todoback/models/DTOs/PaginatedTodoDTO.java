@@ -27,6 +27,8 @@ public class PaginatedTodoDTO {
     private int totalPages;
     private int totalItems;
 
+    private int completedItems;
+
     private boolean allDone;
 
 
@@ -48,7 +50,7 @@ public class PaginatedTodoDTO {
         this.isFirstPage = start == 0;
         this.isLastPage = currentPage == totalPages;
 
-
+        this.completedItems = (int) original.stream().filter(TodoItem::isDone).count();
 
         this.parameters = parameters;
     }
@@ -59,7 +61,7 @@ public class PaginatedTodoDTO {
 
     }
 
-    public void handleAverages(ArrayList<TodoItem> items) {
+    public void handleAverages(List<TodoItem> items) {
         int numLows = 0;
         int numMediums = 0;
         int numHighs = 0;

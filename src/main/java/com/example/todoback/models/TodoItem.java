@@ -3,18 +3,25 @@ package com.example.todoback.models;
 import com.example.todoback.enums.PriorityLevel;
 import com.example.todoback.models.DTOs.GetRequestParamsDTO;
 import com.example.todoback.models.DTOs.TodoItemDTO;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
 
-
 @Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class TodoItem {
 
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
 
     private String text;
@@ -24,20 +31,9 @@ public class TodoItem {
     private PriorityLevel priority;
     private Date creationDate;
 
-    public int translatePriorityValue(){
-        switch (priority){
-            case High -> {
-                return 0;
-            }
-            case Medium -> {
-                return 1;
-            }
-            case Low -> {
-                return 2;
-            }
-        }
 
-        return -1;
+    public int getPriorityValue(){
+        return priority.getValue();
     }
 
     public long translateDueDate(){
@@ -52,7 +48,6 @@ public class TodoItem {
     }
 
     public TodoItem(String text, boolean done, Date dueDate, Date doneDate, PriorityLevel priority) {
-        this.id = UUID.randomUUID().toString();
 
         this.text = text;
         this.done = done;
@@ -65,7 +60,6 @@ public class TodoItem {
     }
 
     public TodoItem(TodoItemDTO dto) {
-        this.id = UUID.randomUUID().toString();
 
         this.text = dto.getText();
         this.dueDate = dto.getDueDate();
@@ -78,21 +72,6 @@ public class TodoItem {
     }
 
     public boolean Filtered(GetRequestParamsDTO params){
-
-//        if(params.getTextFilter().isEmpty()
-//                && params.getPriorityFilter().isEmpty()
-//                && params.getStateFilter().isEmpty() ) { return true; }
-//
-//        if(!params.getTextFilter().isEmpty() &&
-//                this.text.contains(params.getTextFilter())) { return true; }
-//
-//        else if(!params.getPriorityFilter().isEmpty() &&
-//            params.getPriorityFilter().contains(this.priority)) { return true; }
-//
-//        else if(!params.getStateFilter().isEmpty() &&
-//                params.getStateFilter().equals("done") != this.done) { return true; }
-//
-//        return false;
 
         boolean textFilterMatch = params.getTextFilter().isEmpty() || this.text.contains(params.getTextFilter());
         boolean priorityFilterMatch = params.getPriorityFilter().isEmpty() || params.getPriorityFilter().contains(this.priority);
